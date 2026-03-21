@@ -2,18 +2,18 @@
 
 ## 스킬 소개
 
-이 스킬은 **어떤 프로젝트든 Vercel에 배포하는 전체 흐름을 AI 에이전트가 자동으로 처리**하도록 합니다. 프로젝트 상태(linked/unlinked, CLI 인증 여부, git 원격 설정 여부)를 자동 감지하고, 상황에 맞는 최적의 배포 방법을 선택합니다.
+**어떤 프로젝트든 Vercel 배포 전 과정을 에이전트가 알아서 처리**하는 스킬입니다. 프로젝트 상태(linked/unlinked, CLI 인증 여부, git 원격 설정 여부)를 먼저 파악하고 상황에 맞는 배포 방법을 고릅니다.
 
 ---
 
 ## 이 스킬이 필요한 이유
 
-Vercel 배포에는 여러 경로가 있습니다:
+Vercel 배포 경로는 하나가 아닙니다:
 - Git Push로 자동 배포
 - `vercel deploy` CLI로 직접 배포
 - CLI 없이 스크립트로 배포 (claude.ai 샌드박스 환경)
 
-상황을 일일이 판단하고 명령어를 찾는 대신, 이 스킬이 상황을 자동 분석해 올바른 방법을 선택합니다.
+매번 상황 판단해서 명령어 찾을 필요 없이, 이 스킬이 알아서 분석해서 맞는 방법을 씁니다.
 
 ---
 
@@ -52,15 +52,65 @@ vercel teams list --format json 2>/dev/null
 
 상태에 따라 4가지 방법 중 하나를 선택합니다.
 
+아래는 전체 4단계 흐름을 한눈에 보여주는 다이어그램입니다.
+
+```mermaid
+flowchart LR
+    S1["Step 1\n프로젝트 상태 파악\n(git remote / .vercel / CLI 인증)"]
+    --> S2["Step 2\n배포 방법 선택"]
+    --> S3{"방법 선택"}
+
+    S3 -- "A" --> MA["Git Push 배포"]
+    S3 -- "B" --> MB["CLI 배포"]
+    S3 -- "C" --> MC["Link 후 배포"]
+    S3 -- "D" --> MD["No-Auth Fallback"]
+
+    MA --> Done["배포 완료\n(URL 반환)"]
+    MB --> Done
+    MC --> Done
+    MD --> Done
+```
+
 ---
 
 ## 배포 방법 4가지
+
+아래 표는 각 방법의 조건을 한눈에 비교합니다.
+
+| 방법 | `.vercel/` | git remote | CLI 인증 | 사용 환경 |
+|------|:----------:|:----------:|:--------:|----------|
+| **A. Git Push** | 필요 | 필요 | 선택 | 일반 개발 (권장) |
+| **B. CLI 배포** | 필요 | 불필요 | 필요 | 로컬 전용 프로젝트 |
+| **C. Link 후 배포** | 불필요 | 선택 | 필요 | 신규 프로젝트 연결 |
+| **D. No-Auth Fallback** | 불필요 | 불필요 | 불필요 | 샌드박스 / 제한 환경 |
+
+```mermaid
+flowchart LR
+    subgraph 조건["배포 방법별 필요 조건"]
+        direction TB
+        MA2["방법 A\nGit Push"]
+        MB2["방법 B\nCLI 배포"]
+        MC2["방법 C\nLink 후 배포"]
+        MD2["방법 D\nNo-Auth"]
+    end
+
+    V[".vercel/ 폴더"] -- "있음" --> MA2
+    V -- "있음" --> MB2
+    V -- "없음" --> MC2
+    V -- "없음" --> MD2
+
+    G["git remote"] -- "있음" --> MA2
+    G -- "없음" --> MB2
+
+    Auth["CLI 인증"] -- "됨" --> MC2
+    Auth -- "안됨" --> MD2
+```
 
 ### 방법 A: Git Push 배포 (최적 상태)
 
 **조건**: `.vercel/` 존재 + git remote 있음
 
-이 상태가 가장 이상적입니다. 앞으로 git push만 해도 자동 배포됩니다.
+가장 깔끔한 상태입니다. 이제부터 git push 한 번이면 자동으로 배포됩니다.
 
 ```bash
 # 에이전트가 먼저 확인을 요청합니다:
@@ -141,21 +191,29 @@ Claim URL에서 본인 Vercel 계정으로 이전할 수 있습니다.
 
 ## 배포 의사결정 트리
 
-```
-배포 요청 받음
-    │
-    ├─ .vercel/ 존재? ──────────────────────┐
-    │   │                                   │
-    │  YES                                  NO
-    │   │                                   │
-    │   ├─ git remote? ──────┐             CLI 인증됨?
-    │   │                    │              │
-    │  YES                   NO            YES ──→ Link 후 배포 (방법 C)
-    │   │                    │              │
-    │   └─→ Git Push (방법A) └─→ CLI 배포   NO ──→ No-Auth Fallback (방법D)
-    │         (방법 B)
-    │
-    └──────────────────────────────────────────
+아래 차트는 에이전트가 배포 요청을 받았을 때 내부적으로 따르는 판단 흐름입니다. 조건을 위에서 아래로 체크하면 자동으로 올바른 방법에 도달합니다.
+
+```mermaid
+flowchart TD
+    Start["배포 요청 받음"] --> A{".vercel/ 존재?"}
+
+    A -- "Yes" --> B{"git remote 있음?"}
+    A -- "No" --> C{"CLI 인증됨?"}
+
+    B -- "Yes" --> MethodA["방법 A: Git Push 배포\n(.vercel/ + git remote)"]
+    B -- "No" --> MethodB["방법 B: CLI 배포\n(.vercel/ + git remote 없음)"]
+
+    C -- "Yes" --> D{"git remote 있음?"}
+    C -- "No" --> MethodD["방법 D: No-Auth Fallback\n(CLI 없음 / 샌드박스 환경)"]
+
+    D -- "Yes" --> MethodC1["방법 C: repo 기반 Link 후 배포\n(vercel link --repo)"]
+    D -- "No" --> MethodC2["방법 C: 일반 Link 후 배포\n(vercel link)"]
+
+    MethodA --> Done["배포 완료 ✓"]
+    MethodB --> Done
+    MethodC1 --> Done
+    MethodC2 --> Done
+    MethodD --> Done
 ```
 
 ---

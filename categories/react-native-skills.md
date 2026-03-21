@@ -2,19 +2,42 @@
 
 ## 스킬 소개
 
-이 스킬은 **React Native 및 Expo 앱의 성능, 아키텍처, UI 패턴에 대한 30개 이상의 규칙**을 AI 에이전트에 주입합니다. 모바일 앱 개발에서 자주 놓치는 성능 함정과 플랫폼별 모범 사례를 에이전트가 자동으로 적용하도록 합니다.
+**React Native/Expo 앱 성능, 아키텍처, UI 패턴 규칙 30개 이상**을 에이전트에 심는 스킬입니다. 모바일 개발에서 놓치기 쉬운 성능 함정과 플랫폼별 모범 사례를 에이전트가 알아서 챙깁니다.
 
 ---
 
 ## 이 스킬이 필요한 이유
 
-React Native 개발은 웹과 다른 제약이 있습니다:
+React Native는 웹과 다른 제약이 있습니다:
 
-- **JavaScript 스레드 vs UI 스레드**: 잘못된 애니메이션은 JS 스레드를 블로킹합니다
-- **FlatList 성능**: 수백 개 아이템에서 메모이제이션을 놓치면 버벅임이 발생합니다
-- **플랫폼별 UI 패턴**: iOS/Android 각각 네이티브처럼 느껴지는 UI가 있습니다
+- **JavaScript 스레드 vs UI 스레드**: 애니메이션을 잘못 쓰면 JS 스레드가 막힙니다
+- **FlatList 성능**: 아이템 수백 개 되면 메모이제이션 하나 빠뜨려도 버벅임이 납니다
+- **플랫폼별 UI 패턴**: iOS와 Android 각각 네이티브답게 느껴지는 UI가 따로 있습니다
 
-이 스킬은 이런 모바일 특화 지식을 에이전트에 내재화합니다.
+이런 모바일 특화 지식을 에이전트 안에 미리 심어두는 게 이 스킬입니다.
+
+### JavaScript 스레드 vs UI 스레드 구조
+
+```mermaid
+graph LR
+    subgraph JS["JavaScript 스레드"]
+        A["React 컴포넌트\n렌더 로직"]
+        B["State 관리\nuseState / useReducer"]
+        C["일반 애니메이션\nsetState 기반 업데이트"]
+    end
+    subgraph UI["UI 스레드 (Native)"]
+        D["화면 렌더링\n목표: 60fps"]
+        E["Reanimated worklet\nUI 스레드에서 직접 실행"]
+        F["제스처 처리\nGestureDetector"]
+    end
+    A -- "Bridge / JSI 통신" --> D
+    B -- "Bridge / JSI 통신" --> D
+    C -- "느림 ❌\n프레임 드롭 발생" --> D
+    E -- "직접 실행 ✅\n부드러운 애니메이션" --> D
+    F -- "직접 실행 ✅\n지연 없는 제스처" --> D
+```
+
+> **핵심**: Reanimated의 `worklet`과 `GestureDetector`는 JS 스레드를 거치지 않고 UI 스레드에서 직접 실행되므로 JS 스레드가 바빠도 애니메이션이 끊기지 않습니다.
 
 ---
 
@@ -48,6 +71,34 @@ React Native 개발은 웹과 다른 제약이 있습니다:
 | JavaScript | **LOW** | `js-` |
 | Fonts | **LOW** | `fonts-` |
 
+### 섹션 영향도 구조도
+
+```mermaid
+graph TD
+    subgraph CRITICAL["🔴 CRITICAL — 반드시 지켜야 할 핵심 규칙"]
+        S1["Core Rendering\n문자열 감싸기, falsy && 금지\n(rendering-)"]
+    end
+    subgraph HIGH["🟠 HIGH — 성능에 직접 영향을 주는 규칙"]
+        S2["List Performance\n리스트 가상화, 메모이제이션\n(list-performance-)"]
+        S3["Animation\nGPU 속성, GestureDetector\n(animation-)"]
+        S4["Scroll Performance\n스크롤 위치 Shared Value 관리\n(scroll-)"]
+        S5["Navigation\n네이티브 스택/탭 사용\n(navigation-)"]
+    end
+    subgraph MEDIUM["🟡 MEDIUM — 코드 품질에 영향을 주는 규칙"]
+        S6["React State\n함수형 setState, State 최소화\n(react-state-)"]
+        S7["State Architecture\n단일 출처 원칙\n(state-)"]
+        S8["React Compiler\n구조분해, Shared Values\n(react-compiler-)"]
+        S9["User Interface\nexpo-image, Pressable\n(ui-)"]
+        S10["Design System\nCompound Components\n(design-system-)"]
+    end
+    subgraph LOW["🟢 LOW — 프로젝트 구조와 유지보수에 관한 규칙"]
+        S11["Monorepo\n네이티브 종속성 위치\n(monorepo-)"]
+        S12["Third-Party Dependencies\n디자인 시스템 import 경로\n(imports-)"]
+        S13["JavaScript\nIntl 포맷터 호이스팅\n(js-)"]
+        S14["Fonts\n빌드 시 네이티브 폰트 로드\n(fonts-)"]
+    end
+```
+
 ---
 
 ## 섹션 1: Core Rendering (CRITICAL)
@@ -78,7 +129,26 @@ React Native 개발은 웹과 다른 제약이 있습니다:
 
 ## 섹션 2: List Performance (HIGH)
 
-리스트는 React Native 성능의 핵심입니다. 잘못 구현하면 수백 개 아이템에서 심각한 버벅임이 발생합니다.
+### FlatList → FlashList 마이그레이션 흐름
+
+```mermaid
+graph TD
+    START["기존 FlatList 사용 중"] --> PROBLEM["문제 발생?\n아이템 수백 개에서 버벅임"]
+    PROBLEM -- "예" --> INSTALL["@shopify/flash-list 설치\nnpx expo install @shopify/flash-list"]
+    PROBLEM -- "아니오 (소규모 리스트)" --> KEEP["FlatList 유지\n(10개 이하 소규모는 무방)"]
+    INSTALL --> REPLACE["FlatList → FlashList 교체\nimport 경로 변경"]
+    REPLACE --> ESTIMATED["estimatedItemSize 추가\n(아이템 평균 높이 px 단위)"]
+    ESTIMATED --> ITEMTYPE{"아이템 종류가\n다양한가?"}
+    ITEMTYPE -- "예 (이종 리스트)" --> GETTYPE["getItemType 함수 추가\n아이템 타입별 재사용 최적화"]
+    ITEMTYPE -- "아니오 (단일 타입)" --> MEMO["renderItem 메모이제이션 확인\nuseCallback + React.memo"]
+    GETTYPE --> MEMO
+    MEMO --> INLINE{"인라인 객체/함수\n사용 중인가?"}
+    INLINE -- "예" --> EXTRACT["StyleSheet.create로 추출\n또는 컴포넌트 외부로 이동"]
+    INLINE -- "아니오" --> DONE["마이그레이션 완료 ✅\n성능 개선 확인"]
+    EXTRACT --> DONE
+```
+
+리스트는 React Native 성능에서 가장 민감한 부분입니다. 구현이 조금만 어긋나도 아이템 수백 개쯤 되면 버벅임이 바로 납니다.
 
 | 규칙 | 설명 |
 |------|------|
@@ -176,7 +246,7 @@ const derivedOpacity = useDerivedValue(() =>
 
 ### `scroll-position-no-state` — 스크롤 위치를 useState에 저장하지 마라
 
-스크롤 이벤트는 초당 수십 번 발생합니다. useState를 사용하면 매번 리렌더가 발생합니다.
+스크롤 이벤트는 초당 수십 번 터집니다. 여기에 useState를 쓰면 그 횟수만큼 리렌더가 따라옵니다.
 
 ```tsx
 // 나쁜 예: 매 스크롤마다 리렌더
@@ -226,7 +296,7 @@ function AppNavigator() {
 
 ## 섹션 7: State Architecture (MEDIUM)
 
-### `state-ground-truth` — State는 단일 진실의 원천이어야 한다
+### `state-ground-truth` — State는 하나의 출처에서만 관리해야 한다
 
 ```tsx
 // 나쁜 예: 여러 곳에 동기화 필요한 상태

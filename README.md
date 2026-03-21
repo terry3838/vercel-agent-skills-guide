@@ -1,57 +1,74 @@
 # Vercel Agent Skills 마스터 가이드
 
-**개발자를 위한 체계적 AI 에이전트 스킬 학습서**
+**AI 에이전트 스킬 실전 가이드**
 
 ---
 
 ## 이 가이드는 무엇인가?
 
-이 가이드는 [Vercel Labs Agent Skills](https://github.com/vercel-labs/agent-skills)에 수록된 **6개 에이전트 스킬**을 체계적으로 학습하기 위한 교육 문서입니다. 각 스킬이 무엇을 하는지, 언제 사용하는지, 어떻게 설치하고 활용하는지를 설명합니다.
+[Vercel Labs Agent Skills](https://github.com/vercel-labs/agent-skills)에 올라온 **6개 에이전트 스킬**을 뜯어본 문서입니다. 각 스킬이 뭘 하는지, 언제 쓰는지, 어떻게 설치하는지 정리했습니다.
 
-Agent Skills는 **Claude Code, Claude.ai, Codex** 같은 AI 코딩 에이전트에 장착하는 확장 기능입니다. 스킬을 설치하면 에이전트가 해당 스킬의 지식을 자동으로 적용합니다 — "React 컴포넌트 작성해줘"라고 하면 에이전트가 Vercel Engineering이 정리한 64개 성능 최적화 규칙을 자동으로 적용합니다.
+Agent Skills는 **Claude Code, Claude.ai, Codex** 같은 AI 코딩 에이전트에 끼워 쓰는 확장 기능입니다. 설치해두면 에이전트가 관련 요청을 받을 때 스킬의 지식을 꺼내 씁니다. "React 컴포넌트 작성해줘"라고 하면 Vercel Engineering이 정리한 64개 성능 규칙을 알아서 들고 나오는 식입니다.
 
-이 가이드는 각 스킬의 **원본 소스**를 분석해, 실제로 어떤 규칙이 들어있고 언제 쓰면 좋은지를 한국어로 풀어냈습니다.
+각 스킬의 **원본 소스**를 직접 분석해서, 실제로 어떤 규칙이 들어있고 어떤 상황에 쓰면 좋은지 한국어로 풀었습니다.
 
 ---
 
 ## 대상 독자
 
-이 가이드는 다음과 같은 분을 위해 작성되었습니다.
+이런 분들에게 유용합니다.
 
-- **Claude Code, Cursor, Copilot 사용자**: AI 코딩 에이전트를 쓰고 있지만, 에이전트 스킬이라는 개념을 처음 접하는 분
-- **React / Next.js 개발자**: Vercel Engineering의 성능 최적화 모범 사례를 AI 에이전트에 녹여 사용하고 싶은 분
-- **React Native 개발자**: 모바일 앱 개발 시 자주 놓치는 성능 패턴을 에이전트가 자동으로 잡아주길 원하는 분
-- **Vercel 배포 담당자**: 배포 작업을 자연어 명령으로 처리하고 싶은 분
+- **Claude Code, Cursor, Copilot 사용자**: AI 코딩 에이전트는 쓰고 있는데 에이전트 스킬이 뭔지 잘 모르는 분
+- **React / Next.js 개발자**: Vercel Engineering의 성능 최적화 노하우를 에이전트에 녹여 쓰고 싶은 분
+- **React Native 개발자**: 모바일 개발할 때 자주 빠뜨리는 성능 패턴을 에이전트가 대신 챙겨주길 바라는 분
+- **Vercel 배포 담당자**: 배포 작업을 말 한 마디로 처리하고 싶은 분
 
 ---
 
 ## Agent Skills란?
 
-Agent Skills는 **AI 에이전트에 주입하는 전문 지식 패키지**입니다.
+Agent Skills는 **에이전트에 심어두는 전문 지식 패키지**입니다.
 
 작동 방식:
 
 1. 스킬을 설치합니다 (`npx skills add vercel-labs/agent-skills` 또는 `cp`)
-2. AI 에이전트는 대화 중에 관련 스킬을 자동으로 감지합니다
-3. 스킬의 지식(규칙, 절차, 가이드라인)을 적용해 더 나은 코드와 답변을 생성합니다
+2. 에이전트가 대화 중에 관련 스킬을 감지합니다
+3. 스킬의 규칙과 가이드라인을 꺼내 더 나은 코드를 만듭니다
 
-예를 들어, `react-best-practices` 스킬이 설치된 상태에서 "이 Next.js 페이지 최적화해줘"라고 하면, 에이전트는 단순히 코드를 수정하는 것이 아니라 **Waterfall 제거, Bundle 최적화, Server-side 캐싱** 등 우선순위에 따라 체계적으로 개선합니다.
+예를 들어 `react-best-practices` 스킬을 설치한 상태에서 "이 Next.js 페이지 최적화해줘"라고 하면, 단순히 코드를 고치는 게 아니라 **Waterfall 제거, Bundle 최적화, Server-side 캐싱** 순서대로 우선순위에 맞춰 개선해줍니다.
 
 ---
 
 ## Agent Skills 생태계 전체 구조
 
-```
-vercel-labs/agent-skills
-├── skills/
-│   ├── react-best-practices/     # React/Next.js 성능 최적화 (64 규칙)
-│   ├── composition-patterns/     # React 컴포지션 패턴 (8 규칙)
-│   ├── react-native-skills/      # React Native 베스트 프랙티스 (30+ 규칙)
-│   ├── web-design-guidelines/    # 웹 UI/UX 100+ 규칙
-│   ├── deploy-to-vercel/         # Vercel 배포 자동화
-│   └── vercel-cli-with-tokens/   # Vercel CLI 토큰 인증
-└── packages/
-    └── react-best-practices-build/  # 규칙 컴파일 도구
+> 6개 스킬은 `skills/` 폴더에, 규칙 컴파일 도구는 `packages/` 폴더에 분리되어 있습니다. 일반적으로 `skills/` 하위 스킬만 설치하면 됩니다.
+
+```mermaid
+graph TD
+    ROOT["vercel-labs/agent-skills"]
+
+    ROOT --> SKILLS["skills/"]
+    ROOT --> PACKAGES["packages/"]
+
+    SKILLS --> RBP["react-best-practices/\nReact/Next.js 성능 최적화 (64 규칙)"]
+    SKILLS --> CP["composition-patterns/\nReact 컴포지션 패턴 (8 규칙)"]
+    SKILLS --> RNS["react-native-skills/\nReact Native 베스트 프랙티스 (30+ 규칙)"]
+    SKILLS --> WDG["web-design-guidelines/\n웹 UI/UX 100+ 규칙"]
+    SKILLS --> DTV["deploy-to-vercel/\nVercel 배포 자동화"]
+    SKILLS --> VCT["vercel-cli-with-tokens/\nVercel CLI 토큰 인증"]
+
+    PACKAGES --> BUILD["react-best-practices-build/\n규칙 컴파일 도구"]
+
+    style ROOT fill:#000,color:#fff,stroke:#000
+    style SKILLS fill:#171717,color:#fff,stroke:#333
+    style PACKAGES fill:#171717,color:#fff,stroke:#333
+    style RBP fill:#1a1a2e,color:#a78bfa,stroke:#4c1d95
+    style CP fill:#1a1a2e,color:#a78bfa,stroke:#4c1d95
+    style RNS fill:#1a1a2e,color:#a78bfa,stroke:#4c1d95
+    style WDG fill:#1a1a2e,color:#a78bfa,stroke:#4c1d95
+    style DTV fill:#0f2027,color:#6ee7b7,stroke:#065f46
+    style VCT fill:#0f2027,color:#6ee7b7,stroke:#065f46
+    style BUILD fill:#1c1917,color:#fbbf24,stroke:#78350f
 ```
 
 ---
@@ -128,21 +145,41 @@ vercel-labs/agent-skills
 
 ## 추천 학습 경로 요약
 
-스킬은 역할에 따라 선택적으로 설치하면 됩니다.
+역할에 따라 필요한 것만 골라서 설치하면 됩니다.
 
-```
-React/Next.js 개발자
-  → react-best-practices (필수)
-  → composition-patterns (컴포넌트 설계 개선)
-  → web-design-guidelines (UI 품질 향상)
+> 각 역할에 맞는 최단 경로를 따라가면 바로 실전에 투입할 수 있습니다. 필수 → 권장 → 선택 순서로 진행하세요.
 
-React Native 개발자
-  → react-native-skills (필수)
-  → composition-patterns (컴포넌트 아키텍처)
+```mermaid
+flowchart LR
+    subgraph RN["React/Next.js 개발자"]
+        direction LR
+        A1["react-best-practices\n✅ 필수"]
+        A2["composition-patterns\n⭐ 권장"]
+        A3["web-design-guidelines\n💡 선택"]
+        A1 --> A2 --> A3
+    end
 
-배포 담당자
-  → deploy-to-vercel (빠른 배포)
-  → vercel-cli-with-tokens (CI/CD 자동화)
+    subgraph RNative["React Native 개발자"]
+        direction LR
+        B1["react-native-skills\n✅ 필수"]
+        B2["composition-patterns\n⭐ 권장"]
+        B1 --> B2
+    end
+
+    subgraph Deploy["배포 담당자"]
+        direction LR
+        C1["deploy-to-vercel\n✅ 필수"]
+        C2["vercel-cli-with-tokens\n⭐ 권장"]
+        C1 --> C2
+    end
+
+    style A1 fill:#1a1a2e,color:#6ee7b7,stroke:#065f46
+    style A2 fill:#1a1a2e,color:#fbbf24,stroke:#78350f
+    style A3 fill:#1a1a2e,color:#93c5fd,stroke:#1e3a5f
+    style B1 fill:#1a1a2e,color:#6ee7b7,stroke:#065f46
+    style B2 fill:#1a1a2e,color:#fbbf24,stroke:#78350f
+    style C1 fill:#1a1a2e,color:#6ee7b7,stroke:#065f46
+    style C2 fill:#1a1a2e,color:#fbbf24,stroke:#78350f
 ```
 
 자세한 학습 경로, 스킬 간 연결 관계, 시나리오별 실행 순서는 [01-learning-paths.md](01-learning-paths.md)를 참조하세요.

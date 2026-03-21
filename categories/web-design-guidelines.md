@@ -2,22 +2,22 @@
 
 ## 스킬 소개
 
-이 스킬은 **웹 UI 코드를 100개 이상의 규칙으로 감사하는 에이전트 스킬**입니다. 접근성(a11y), 성능, UX, 폼 처리, 애니메이션, 국제화 등 실전 웹 개발에서 자주 놓치는 항목들을 체계적으로 점검합니다.
+**웹 UI 코드를 100개 이상 규칙으로 검토하는 스킬**입니다. 접근성(a11y), 성능, UX, 폼 처리, 애니메이션, 국제화 등 실전에서 흘려보내기 쉬운 항목들을 하나씩 짚어냅니다.
 
-특이한 점: 이 스킬은 규칙을 직접 내장하지 않고, **항상 최신 가이드라인을 원격에서 fetch**합니다. 규칙이 업데이트되면 스킬도 자동으로 최신 버전을 사용합니다.
+특이한 점이 있는데, 규칙을 파일에 담아두는 게 아니라 **매번 최신 가이드라인을 원격에서 가져옵니다**. 가이드라인이 바뀌면 스킬도 알아서 최신 버전을 씁니다.
 
 ---
 
 ## 이 스킬이 필요한 이유
 
-UI 코드 리뷰에서 접근성, 성능, UX 항목을 빠뜨리기 쉽습니다:
+UI 코드 리뷰에서 이런 것들을 흔히 넘어갑니다:
 
-- `<img>`에 `alt` 속성을 빠뜨리는 경우
-- 폼에 `autocomplete` 속성이 없어 모바일에서 불편한 경우
-- 애니메이션에 `prefers-reduced-motion` 미처리로 접근성 위반
-- 다크모드 대응 누락
+- `<img>`에 `alt` 속성 빠뜨리는 경우
+- 폼에 `autocomplete` 없어서 모바일에서 불편한 경우
+- 애니메이션에 `prefers-reduced-motion` 빠져서 접근성 위반
+- 다크모드 대응 빠진 경우
 
-이 스킬은 에이전트가 이런 항목을 **`file:line` 형식**으로 정확히 지적하도록 합니다.
+이 스킬이 있으면 에이전트가 이런 것들을 **`file:line` 형식**으로 정확히 집어냅니다.
 
 ---
 
@@ -35,18 +35,41 @@ UI 코드 리뷰에서 접근성, 성능, UX 항목을 빠뜨리기 쉽습니다
 
 ## 작동 방식
 
-```
-1. 사용자가 "UI 리뷰해줘" 또는 "접근성 체크해줘" 요청
-2. 에이전트가 최신 가이드라인을 원격 URL에서 fetch
-   → https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md
-3. 지정한 파일(들)을 읽음
-4. 100+ 규칙 모두 적용해 위반 사항 감지
-5. file:line 형식으로 결과 출력
+```mermaid
+flowchart TD
+    A["사용자 요청\n'UI 리뷰해줘' / '접근성 체크해줘'"] --> B["최신 가이드라인 가져오기\ngithub.com/vercel-labs/\nweb-interface-guidelines"]
+    B --> C["대상 파일 읽기"]
+    C --> D["100+ 규칙 적용\n검사 실행"]
+    D --> E["위반 사항 보고\nfile:line 형식"]
+    E --> F["개선 방향 제시"]
 ```
 
 ---
 
 ## 11개 검사 카테고리
+
+```mermaid
+graph TD
+    subgraph A11Y["접근성 & 포커스"]
+        C1["1. Accessibility\n접근성"]
+        C2["2. Focus States\n포커스 상태"]
+    end
+    subgraph UX["UX & 인터랙션"]
+        C3["3. Forms\n폼"]
+        C4["4. Animation\n애니메이션"]
+        C8["8. Navigation & State\n네비게이션 & 상태"]
+        C10["10. Touch & Interaction\n터치 & 인터랙션"]
+    end
+    subgraph VISUAL["시각 & 콘텐츠"]
+        C5["5. Typography\n타이포그래피"]
+        C6["6. Images\n이미지"]
+        C9["9. Dark Mode & Theming\n다크모드 & 테마"]
+    end
+    subgraph PERF_I18N["성능 & 국제화"]
+        C7["7. Performance\n성능"]
+        C11["11. Locale & i18n\n국제화"]
+    end
+```
 
 ### 1. Accessibility (접근성)
 
@@ -217,7 +240,7 @@ src/styles/global.css:12 [애니메이션] prefers-reduced-motion 미처리
 
 ## 트리거 키워드
 
-이 스킬은 다음 요청에서 자동 활성화됩니다:
+다음 요청에서 활성화됩니다:
 
 - "UI 리뷰해줘" / "Review my UI"
 - "접근성 체크" / "Check accessibility"

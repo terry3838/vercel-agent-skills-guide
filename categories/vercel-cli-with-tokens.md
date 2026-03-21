@@ -2,19 +2,19 @@
 
 ## 스킬 소개
 
-이 스킬은 **`vercel login` 대화형 인증 없이 토큰 기반으로 Vercel CLI를 사용하는 방법**을 AI 에이전트에 주입합니다. CI/CD 파이프라인, 자동화 스크립트, 또는 브라우저를 열 수 없는 환경에서 Vercel 작업을 수행할 때 필요합니다.
+**`vercel login` 없이 토큰으로 Vercel CLI를 쓰는 방법**을 에이전트에 심어두는 스킬입니다. CI/CD 파이프라인, 자동화 스크립트, 브라우저를 띄울 수 없는 환경에서 필요합니다.
 
 ---
 
 ## 이 스킬이 필요한 이유
 
-`vercel login`은 브라우저를 열어 OAuth 인증을 완료해야 합니다. 하지만:
+`vercel login`은 브라우저에서 OAuth 인증을 끝내야 합니다. 그런데 현실은:
 
-- **CI/CD 환경**: GitHub Actions, Jenkins에서는 브라우저가 없습니다
-- **서버 자동화**: 스크립트에서 Vercel 배포 자동화 시
-- **AI 에이전트 환경**: 인터랙티브 입력을 받을 수 없는 환경
+- **CI/CD 환경**: GitHub Actions, Jenkins에는 브라우저가 없음
+- **서버 자동화**: 스크립트에서 Vercel 배포를 자동화할 때
+- **AI 에이전트 환경**: 인터랙티브 입력 자체가 안 되는 환경
 
-이 스킬은 `VERCEL_TOKEN` 환경변수를 통해 토큰을 안전하게 사용하는 전체 흐름을 안내합니다.
+이 스킬은 `VERCEL_TOKEN` 환경변수로 토큰을 안전하게 쓰는 흐름을 처음부터 끝까지 안내합니다.
 
 ---
 
@@ -32,6 +32,26 @@
 ## Step 1: 토큰 찾기
 
 에이전트는 다음 순서로 토큰을 찾습니다. 토큰을 직접 묻기 전에 반드시 이 순서를 따릅니다.
+
+```mermaid
+flowchart TD
+    A["토큰 탐색 시작"] --> B["환경변수 확인\nprintenv VERCEL_TOKEN"]
+    B --> C{토큰 발견?}
+    C -- "Yes" --> Z["✓ 토큰 사용"]
+    C -- "No" --> D[".env에서\nVERCEL_TOKEN 탐색"]
+    D --> E{발견?}
+    E -- "Yes" --> Z
+    E -- "No" --> F[".env에서\nvca_ prefix 토큰 탐색"]
+    F --> G{발견?}
+    G -- "Yes" --> H["변수명 확인 후\nexport VERCEL_TOKEN=..."]
+    H --> Z
+    G -- "No" --> I["사용자에게 토큰 요청\nvercel.com/account/tokens"]
+    I --> Z
+
+    style A fill:#4f46e5,color:#fff
+    style Z fill:#16a34a,color:#fff
+    style I fill:#dc2626,color:#fff
+```
 
 ### A. 환경변수 확인
 
@@ -104,6 +124,32 @@ grep -i 'vercel' .env 2>/dev/null
 ---
 
 ## 배포 시나리오
+
+아래 차트는 상황에 따라 어떤 시나리오를 선택해야 하는지 한눈에 보여줍니다.
+
+```mermaid
+flowchart TD
+    Start["배포 시작"] --> Q1{VERCEL_TOKEN\n보유?}
+    Q1 -- "No" --> Step1["Step 1로 돌아가서\n토큰 확보"]
+    Q1 -- "Yes" --> Q2{VERCEL_ORG_ID +\nVERCEL_PROJECT_ID\n모두 보유?}
+
+    Q2 -- "Yes" --> S1["시나리오 1\n빠른 배포\nvercel deploy -y --no-wait"]
+    Q2 -- "No" --> Q3{로컬에\n저장소 존재?}
+
+    Q3 -- "Yes" --> S2["시나리오 2\n전체 배포 흐름\nvercel link → vercel deploy"]
+    Q3 -- "No" --> S3["시나리오 3\n원격 저장소에서 배포\ngit clone → vercel link → vercel deploy"]
+
+    S1 --> Done["배포 완료\n(URL 반환)"]
+    S2 --> Done
+    S3 --> Done
+
+    style Start fill:#4f46e5,color:#fff
+    style S1 fill:#0ea5e9,color:#fff
+    style S2 fill:#0ea5e9,color:#fff
+    style S3 fill:#0ea5e9,color:#fff
+    style Done fill:#16a34a,color:#fff
+    style Step1 fill:#dc2626,color:#fff
+```
 
 ### 시나리오 1: 빠른 배포 (Project ID 보유)
 
@@ -217,14 +263,14 @@ vercel domains add <domain> --scope <team-slug>
 
 ## 에이전트 작업 협약
 
-이 스킬이 활성화되면 에이전트는 다음 규칙을 따릅니다:
+이 스킬이 활성화되면 에이전트는 이 규칙대로 움직입니다:
 
-- **토큰을 `--token` 플래그로 전달하지 않음** — 환경변수로만 사용
-- **환경과 .env를 먼저 확인** — 사용자에게 묻기 전에 자동 탐색
-- **기본값은 프리뷰 배포** — production은 명시적 요청 시만
-- **git push 전 사용자 확인** — 절대 무단 push 금지
-- **`.vercel/` 파일 직접 수정 금지** — CLI가 관리
-- **배포 URL curl/fetch 금지** — 링크만 반환
+- **토큰을 `--token` 플래그로 넘기지 않음** — 환경변수로만
+- **환경과 .env부터 먼저 뒤짐** — 사용자에게 묻기 전에 스스로 탐색
+- **기본은 프리뷰 배포** — production은 명시적으로 요청할 때만
+- **git push 전 사용자 확인 필수** — 무단 push 절대 없음
+- **`.vercel/` 파일 직접 수정 금지** — CLI가 알아서 관리
+- **배포 URL curl/fetch 금지** — 링크만 돌려줌
 
 ---
 
@@ -289,6 +335,35 @@ cp -r ~/guide/origin/agent-skills/skills/vercel-cli-with-tokens ~/.claude/skills
 | **적합한 환경** | 일반 개발 환경 | CI/CD, 자동화 |
 | **No-auth fallback** | 있음 (스크립트) | 없음 |
 | **환경변수 관리** | 없음 | 있음 |
+
+```mermaid
+flowchart LR
+    subgraph DTV["deploy-to-vercel 스킬"]
+        direction TB
+        D1["일반 개발 환경"]
+        D2["브라우저 로그인 가능"]
+        D3["대화형 인증 지원"]
+        D4["No-auth fallback 있음"]
+        D1 --- D2 --- D3 --- D4
+    end
+
+    subgraph CWT["vercel-cli-with-tokens 스킬"]
+        direction TB
+        C1["CI/CD 환경\n(GitHub Actions 등)"]
+        C2["브라우저 없는 서버"]
+        C3["AI 에이전트 자동화"]
+        C4["환경변수 관리 포함"]
+        C1 --- C2 --- C3 --- C4
+    end
+
+    Q{"내 환경은?"}
+    Q -- "로그인 가능\n일반 개발" --> DTV
+    Q -- "자동화·CI/CD\n토큰 필요" --> CWT
+
+    style DTV fill:#e0f2fe,stroke:#0ea5e9
+    style CWT fill:#ede9fe,stroke:#7c3aed
+    style Q fill:#f8fafc,stroke:#94a3b8
+```
 
 ---
 
