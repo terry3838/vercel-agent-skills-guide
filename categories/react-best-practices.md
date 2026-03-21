@@ -90,7 +90,7 @@ sequenceDiagram
     participant U as 사용자 브라우저
     participant S as 서버 / API
 
-    Note over U,S: ❌ 직렬 실행 — 총 300ms 소요
+    Note over U,S: 직렬 실행 (총 300ms 소요)
 
     U->>S: getUser() 요청
     S-->>U: 응답 (100ms)
@@ -99,7 +99,7 @@ sequenceDiagram
     U->>S: getComments() 요청
     S-->>U: 응답 (100ms)
 
-    Note over U,S: ✅ 병렬 실행 (Promise.all) — 총 100ms 소요
+    Note over U,S: 병렬 실행 Promise.all (총 100ms 소요)
 
     par getUser() 동시 시작
         U->>S: getUser() 요청

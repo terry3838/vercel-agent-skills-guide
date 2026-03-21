@@ -63,9 +63,9 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    S1["🔴 Section 1: Component Architecture\nCRITICAL\n• avoid-boolean-props\n• compound-components"]
-    S2["🟠 Section 2: State Management\nHIGH\n• lift-state\n• context-interface\n• decouple-implementation"]
-    S3["🟡 Section 3: Implementation Patterns\nMEDIUM\n• children-over-render-props\n• explicit-variants\n• no-forwardref"]
+    S1["🔴 Section 1: Component Architecture\nCRITICAL\navoid-boolean-props, compound-components"]
+    S2["🟠 Section 2: State Management\nHIGH\nlift-state, context-interface, decouple-impl"]
+    S3["🟡 Section 3: Implementation Patterns\nMEDIUM\nchildren-over-render, explicit-variants, no-forwardref"]
 
     S1 -->|"구조를 잡으면"| S2
     S2 -->|"상태를 분리하면"| S3

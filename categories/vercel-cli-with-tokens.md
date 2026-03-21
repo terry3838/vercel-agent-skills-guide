@@ -129,12 +129,12 @@ grep -i 'vercel' .env 2>/dev/null
 
 ```mermaid
 flowchart TD
-    Start["배포 시작"] --> Q1{VERCEL_TOKEN\n보유?}
-    Q1 -- "No" --> Step1["Step 1로 돌아가서\n토큰 확보"]
-    Q1 -- "Yes" --> Q2{VERCEL_ORG_ID +\nVERCEL_PROJECT_ID\n모두 보유?}
+    Start["배포 시작"] --> Q1{"VERCEL_TOKEN 보유?"}
+    Q1 -- "No" --> Step1["Step 1로 돌아가서 토큰 확보"]
+    Q1 -- "Yes" --> Q2{"VERCEL_ORG_ID + VERCEL_PROJECT_ID 모두 보유?"}
 
-    Q2 -- "Yes" --> S1["시나리오 1\n빠른 배포\nvercel deploy -y --no-wait"]
-    Q2 -- "No" --> Q3{로컬에\n저장소 존재?}
+    Q2 -- "Yes" --> S1["시나리오 1: 빠른 배포\nvercel deploy -y --no-wait"]
+    Q2 -- "No" --> Q3{"로컬에 저장소 존재?"}
 
     Q3 -- "Yes" --> S2["시나리오 2\n전체 배포 흐름\nvercel link → vercel deploy"]
     Q3 -- "No" --> S3["시나리오 3\n원격 저장소에서 배포\ngit clone → vercel link → vercel deploy"]

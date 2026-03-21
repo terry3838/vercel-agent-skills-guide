@@ -32,9 +32,9 @@ graph LR
     end
     A -- "Bridge / JSI 통신" --> D
     B -- "Bridge / JSI 통신" --> D
-    C -- "느림 ❌\n프레임 드롭 발생" --> D
-    E -- "직접 실행 ✅\n부드러운 애니메이션" --> D
-    F -- "직접 실행 ✅\n지연 없는 제스처" --> D
+    C -- "느림: 프레임 드롭" --> D
+    E -- "직접 실행: 부드러운 애니메이션" --> D
+    F -- "직접 실행: 지연 없는 제스처" --> D
 ```
 
 > **핵심**: Reanimated의 `worklet`과 `GestureDetector`는 JS 스레드를 거치지 않고 UI 스레드에서 직접 실행되므로 JS 스레드가 바빠도 애니메이션이 끊기지 않습니다.
@@ -75,23 +75,23 @@ graph LR
 
 ```mermaid
 graph TD
-    subgraph CRITICAL["🔴 CRITICAL — 반드시 지켜야 할 핵심 규칙"]
+    subgraph CRITICAL["🔴 CRITICAL: 반드시 지켜야 할 핵심 규칙"]
         S1["Core Rendering\n문자열 감싸기, falsy && 금지\n(rendering-)"]
     end
-    subgraph HIGH["🟠 HIGH — 성능에 직접 영향을 주는 규칙"]
+    subgraph HIGH["🟠 HIGH: 성능에 직접 영향을 주는 규칙"]
         S2["List Performance\n리스트 가상화, 메모이제이션\n(list-performance-)"]
         S3["Animation\nGPU 속성, GestureDetector\n(animation-)"]
         S4["Scroll Performance\n스크롤 위치 Shared Value 관리\n(scroll-)"]
         S5["Navigation\n네이티브 스택/탭 사용\n(navigation-)"]
     end
-    subgraph MEDIUM["🟡 MEDIUM — 코드 품질에 영향을 주는 규칙"]
+    subgraph MEDIUM["🟡 MEDIUM: 코드 품질에 영향을 주는 규칙"]
         S6["React State\n함수형 setState, State 최소화\n(react-state-)"]
         S7["State Architecture\n단일 출처 원칙\n(state-)"]
         S8["React Compiler\n구조분해, Shared Values\n(react-compiler-)"]
         S9["User Interface\nexpo-image, Pressable\n(ui-)"]
         S10["Design System\nCompound Components\n(design-system-)"]
     end
-    subgraph LOW["🟢 LOW — 프로젝트 구조와 유지보수에 관한 규칙"]
+    subgraph LOW["🟢 LOW: 프로젝트 구조와 유지보수에 관한 규칙"]
         S11["Monorepo\n네이티브 종속성 위치\n(monorepo-)"]
         S12["Third-Party Dependencies\n디자인 시스템 import 경로\n(imports-)"]
         S13["JavaScript\nIntl 포맷터 호이스팅\n(js-)"]

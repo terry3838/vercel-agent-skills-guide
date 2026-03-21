@@ -86,7 +86,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    subgraph 조건["배포 방법별 필요 조건"]
+    subgraph COND["배포 방법별 필요 조건"]
         direction TB
         MA2["방법 A\nGit Push"]
         MB2["방법 B\nCLI 배포"]

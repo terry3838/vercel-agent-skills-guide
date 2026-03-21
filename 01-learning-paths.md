@@ -26,8 +26,8 @@
 ```mermaid
 quadrantChart
     title 스킬 난이도 vs 규칙 수
-    x-axis 초급 --> 고급
-    y-axis 규칙 적음 --> 규칙 많음
+    x-axis "초급" --> "고급"
+    y-axis "규칙 적음" --> "규칙 많음"
     quadrant-1 "고급·고밀도 (핵심)"
     quadrant-2 "초급·고밀도 (빠른 효과)"
     quadrant-3 "초급·저밀도 (진입점)"
@@ -161,7 +161,7 @@ graph TD
     dtv -->|"상호 보완 (환경에 따라 선택)"| vct
 
     classDef independent fill:#1e3a2f,color:#a8ffcb,stroke:#2ecc71,stroke-dasharray:6 3
-    classDef default fill:#1a1a2e,color:#e0e0ff,stroke:#6c63ff,stroke-width:2px
+    classDef normal fill:#1a1a2e,color:#e0e0ff,stroke:#6c63ff,stroke-width:2px
 ```
 
 ---
