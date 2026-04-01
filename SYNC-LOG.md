@@ -11,6 +11,17 @@
 
 이번 싸이클에서는 origin 변경이 없어 guide 본문은 유지했고, 동기화 기준점만 재확인했습니다.
 
+## upstream commits reviewed
+
+- `8c56b3d Refine react-view-transition skill`
+- `cb4103b Tune view transition skill`
+- `87365c2 Tune view transition skill`
+- `427b7d9 Add zip for react-view-transition skill`
+- `2ea774e Remove claim of "flip" in main readme view transition reference`
+- `198c0aa Refine react-view-transitions skill`
+- `8848e73 Refine react-view-transitions skill`
+- `da310cf Merge pull request #210 from vercel-labs/tune-viewtransition-skill`
+
 ## evidence
 
 - source remote: `https://github.com/vercel-labs/agent-skills.git`

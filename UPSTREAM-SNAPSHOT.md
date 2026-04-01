@@ -11,6 +11,17 @@
 
 A collection of skills for AI coding agents. Skills are packaged instructions and scripts that extend agent capabilities.
 
+## recent upstream commits
+
+- `8c56b3d Refine react-view-transition skill`
+- `cb4103b Tune view transition skill`
+- `87365c2 Tune view transition skill`
+- `427b7d9 Add zip for react-view-transition skill`
+- `2ea774e Remove claim of "flip" in main readme view transition reference`
+- `198c0aa Refine react-view-transitions skill`
+- `8848e73 Refine react-view-transitions skill`
+- `da310cf Merge pull request #210 from vercel-labs/tune-viewtransition-skill`
+
 ## top-level structure
 
 - `AGENTS.md`
