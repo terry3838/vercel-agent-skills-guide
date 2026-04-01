@@ -1,7 +1,10 @@
 # Upstream Snapshot — agent-skills
 
 - source repo: `https://github.com/vercel-labs/agent-skills.git`
-- synced commit: `8c56b3d4b89e9fba07a959097ae01fb401d542bc`
+- previous synced commit: `8c56b3d4b89e9fba07a959097ae01fb401d542bc`
+- current synced commit: `8c56b3d4b89e9fba07a959097ae01fb401d542bc`
+- sync mode: `no-change`
+- impact labels: 일반 변경
 - guide repo: `vercel-agent-skills-guide`
 
 ## 원본 한줄 요약
@@ -15,6 +18,10 @@ A collection of skills for AI coding agents. Skills are packaged instructions an
 - `packages/`
 - `README.md`
 - `skills/`
+
+## changed files
+
+- 변경 파일 없음
 
 ## README excerpt
 
@@ -99,4 +106,44 @@ Implement smooth, native-feeling animations using React's View Transition API. C
 - Creating shared element transitions (list-to-detail morphing)
 - Implementing directional (forward/back) navigation animations
 - Integrating view transitions in Next.js App Router
+- Animating list reorder or Suspense fallback reveals
+
+**Topics covered:**
+- `<ViewTransition>` component (enter, exit, update, share triggers)
+- `addTransitionType` for directional/context-specific animations
+- View Transition Classes and CSS pseudo-elements
+- Shared element transitions with the `name` prop
+- JavaScript animations via Web Animations API
+- Next.js `transitionTypes` prop on `next/link`
+- Ready-to-use CSS animation recipes (fade, slide, scale, flip)
+- Accessibility (`prefers-reduced-motion`)
+
+### composition-patterns
+
+React composition patterns that scale. Helps avoid boolean prop proliferation through compound components, state lifting, and internal composition.
+
+**Use when:**
+- Refactoring components with many boolean props
+- Building reusable component libraries
+- Designing flexible APIs
+- Reviewing component architecture
+
+**Patterns covered:**
+- Extracting compound components
+- Lifting state to reduce props
+- Composing internals for flexibility
+- Avoiding prop drilling
+
+### vercel-deploy-claimable
+
+Deploy applications and websites to Vercel instantly. Designed for use with claude.ai and Claude Desktop to enable deployments directly from conversations. Deployments are "claimable" - users can transfer ownership to their own Vercel account.
+
+**Use when:**
+- "Deploy my app"
+- "Deploy this to production"
+- "Push this live"
+- "Deploy and give me the link"
+
+**Features:**
+- Auto-detects 40+ frameworks from `package.json`
 ```

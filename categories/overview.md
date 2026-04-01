@@ -1,3 +1,33 @@
 # agent-skills 개요
 
-초기 bootstrap 문서입니다.
+## 원본 저장소 역할
+
+- repo: `agent-skills`
+- source: `https://github.com/vercel-labs/agent-skills.git`
+- latest synced commit: `8c56b3d4b89e`
+- summary: A collection of skills for AI coding agents. Skills are packaged instructions and scripts that extend agent capabilities.
+
+## 이번 싸이클 판단
+
+- sync mode: `no-change`
+- impact labels: 일반 변경
+- 판단: 이번 싸이클에서는 origin 변경이 없어 guide 본문은 유지했고, 동기화 기준점만 재확인했습니다.
+
+## 확인한 원본 구조
+
+- `AGENTS.md`
+- `CLAUDE.md`
+- `packages/`
+- `README.md`
+- `skills/`
+
+## guide 업데이트 포인트
+
+- README 관리 블록 갱신
+- `UPSTREAM-SNAPSHOT.md` 갱신
+- `SYNC-LOG.md` 갱신
+- 개요 문서 재작성
+
+## 변경 파일 샘플
+
+- 변경 파일 없음
