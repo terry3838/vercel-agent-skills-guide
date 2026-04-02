@@ -263,26 +263,32 @@ vercel-agent-skills-guide/
 ## 자동 동기화 상태
 
 - origin repo: `agent-skills`
-- latest source commit: `8c56b3d4b89e`
-- sync mode: `no-change`
-- 영향 분류: 일반 변경
+- latest source commit: `d8d9f624bc54`
+- sync mode: `update`
+- 영향 분류: 스킬/플러그인
 
 ### 이번 반영 포인트
 
-이번 싸이클에서는 origin 변경이 없어 guide 본문은 유지했고, 동기화 기준점만 재확인했습니다.
+origin 변경 파일을 기준으로 guide 문서의 관련 섹션을 다시 읽고 반영했습니다. 핵심 영향 영역: 스킬/플러그인.
 
 ### 최근 upstream 커밋
 
-- `8c56b3d Refine react-view-transition skill`
-- `cb4103b Tune view transition skill`
-- `87365c2 Tune view transition skill`
-- `427b7d9 Add zip for react-view-transition skill`
-- `2ea774e Remove claim of "flip" in main readme view transition reference`
-- `198c0aa Refine react-view-transitions skill`
+- `d8d9f62 Refine react-view-transition skill to include details about loading.tsx`
+- `8de1770 Specify nextjs canary relationship better in react-view-transition skill`
+- `5a4b5e1 Add more patterns to react-view-transition skill`
+- `b8dbce9 Add limitation note to react-view-transition skill`
+- `48bda1c Refine react-view-transition skill`
 
 ### 변경 파일 샘플
 
-- 이번 싸이클에서는 신규 변경 파일이 없습니다.
+- `skills/react-view-transitions.zip`
+- `skills/react-view-transitions/AGENTS.md`
+- `skills/react-view-transitions/README.md`
+- `skills/react-view-transitions/SKILL.md`
+- `skills/react-view-transitions/references/css-recipes.md`
+- `skills/react-view-transitions/references/implementation.md`
+- `skills/react-view-transitions/references/nextjs.md`
+- `skills/react-view-transitions/references/patterns.md`
 
 > 이 블록은 guide sync가 자동 갱신합니다.
 <!-- GUIDE_SYNC:END -->
