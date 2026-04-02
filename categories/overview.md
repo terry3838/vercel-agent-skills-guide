@@ -9,9 +9,9 @@
 
 ## 이번 싸이클 판단
 
-- sync mode: `update`
-- impact labels: 스킬/플러그인
-- 판단: origin 변경 파일을 기준으로 guide 문서의 관련 섹션을 다시 읽고 반영했습니다. 핵심 영향 영역: 스킬/플러그인.
+- sync mode: `no-change`
+- impact labels: 일반 변경
+- 판단: 이번 싸이클에서는 origin 변경이 없어 guide 본문은 유지했고, 동기화 기준점만 재확인했습니다.
 
 ## 최근 upstream 커밋
 
@@ -20,6 +20,7 @@
 - `5a4b5e1 Add more patterns to react-view-transition skill`
 - `b8dbce9 Add limitation note to react-view-transition skill`
 - `48bda1c Refine react-view-transition skill`
+- `8c56b3d Refine react-view-transition skill`
 
 ## 확인한 원본 구조
 
@@ -38,11 +39,4 @@
 
 ## 변경 파일 샘플
 
-- `skills/react-view-transitions.zip`
-- `skills/react-view-transitions/AGENTS.md`
-- `skills/react-view-transitions/README.md`
-- `skills/react-view-transitions/SKILL.md`
-- `skills/react-view-transitions/references/css-recipes.md`
-- `skills/react-view-transitions/references/implementation.md`
-- `skills/react-view-transitions/references/nextjs.md`
-- `skills/react-view-transitions/references/patterns.md`
+- 변경 파일 없음
