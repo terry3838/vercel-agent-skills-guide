@@ -1,263 +1,131 @@
-# Vercel Agent Skills 마스터 가이드
+# Vercel Agent Skills 학습 가이드
 
-**AI 에이전트 스킬 실전 가이드**
+Vercel Labs의 Agent Skills는 “에이전트에게 규칙을 몇 개 더 알려주는 부가자료”가 아니다. 이 저장소의 핵심은 **프레임워크별/작업별 지식을 SKILL.md 형식으로 패키징해서, AI 코딩 에이전트가 적절한 순간에 꺼내 쓰게 하는 것**이다.
 
----
-
-## 이 가이드는 무엇인가?
-
-[Vercel Labs Agent Skills](https://github.com/vercel-labs/agent-skills)에 올라온 **6개 에이전트 스킬**을 뜯어본 문서입니다. 각 스킬이 뭘 하는지, 언제 쓰는지, 어떻게 설치하는지 정리했습니다.
-
-Agent Skills는 **Claude Code, Claude.ai, Codex** 같은 AI 코딩 에이전트에 끼워 쓰는 확장 기능입니다. 설치해두면 에이전트가 관련 요청을 받을 때 스킬의 지식을 꺼내 씁니다. "React 컴포넌트 작성해줘"라고 하면 Vercel Engineering이 정리한 64개 성능 규칙을 알아서 들고 나오는 식입니다.
-
-각 스킬의 **원본 소스**를 직접 분석해서, 실제로 어떤 규칙이 들어있고 어떤 상황에 쓰면 좋은지 한국어로 풀었습니다.
+이 가이드는 원본 저장소를 직접 대조해, 각 스킬을 단순 소개하는 데서 멈추지 않고 **왜 이 저장소를 skill pack으로 읽어야 하는지 / 어떤 스킬이 어떤 작업 레인에 대응하는지 / 최근 upstream 변화가 어디에 있는지**를 다시 정리한다.
 
 ---
 
-## 대상 독자
+## 현재 기준선
 
-이런 분들에게 유용합니다.
-
-- **Claude Code, Cursor, Copilot 사용자**: AI 코딩 에이전트는 쓰고 있는데 에이전트 스킬이 뭔지 잘 모르는 분
-- **React / Next.js 개발자**: Vercel Engineering의 성능 최적화 노하우를 에이전트에 녹여 쓰고 싶은 분
-- **React Native 개발자**: 모바일 개발할 때 자주 빠뜨리는 성능 패턴을 에이전트가 대신 챙겨주길 바라는 분
-- **Vercel 배포 담당자**: 배포 작업을 말 한 마디로 처리하고 싶은 분
-
----
-
-## Agent Skills란?
-
-Agent Skills는 **에이전트에 심어두는 전문 지식 패키지**입니다.
-
-작동 방식:
-
-1. 스킬을 설치합니다 (`npx skills add vercel-labs/agent-skills` 또는 `cp`)
-2. 에이전트가 대화 중에 관련 스킬을 감지합니다
-3. 스킬의 규칙과 가이드라인을 꺼내 더 나은 코드를 만듭니다
-
-예를 들어 `react-best-practices` 스킬을 설치한 상태에서 "이 Next.js 페이지 최적화해줘"라고 하면, 단순히 코드를 고치는 게 아니라 **Waterfall 제거, Bundle 최적화, Server-side 캐싱** 순서대로 우선순위에 맞춰 개선해줍니다.
+- upstream repo: `vercel-labs/agent-skills`
+- latest synced commit: `d8d9f624bc54`
+- 현재 frontdoor에서 먼저 기억해야 할 변화:
+  - 이제 핵심은 **6개가 아니라 7개 스킬**로 읽는 편이 맞다
+  - 최근 업데이트의 중심은 `react-view-transitions` 보강이다
+  - 저장소는 `skills/`와 `packages/`로 나뉘며, 보통 설치 대상은 `skills/` 쪽이다
 
 ---
 
-## Agent Skills 생태계 전체 구조
+## 이 저장소를 한 문장으로 말하면
 
-> 6개 스킬은 `skills/` 폴더에, 규칙 컴파일 도구는 `packages/` 폴더에 분리되어 있습니다. 일반적으로 `skills/` 하위 스킬만 설치하면 됩니다.
+**React, Next.js, React Native, UI 감사, Vercel 배포 같은 반복 작업을 에이전트가 더 잘 수행하게 만드는 skill pack 저장소**다.
 
-```mermaid
-graph TD
-    ROOT["vercel-labs/agent-skills"]
+핵심은 두 가지다.
 
-    ROOT --> SKILLS["skills/"]
-    ROOT --> PACKAGES["packages/"]
+1. 스킬이 **작업 맥락을 감지하면 자동으로 발화**된다는 점
+2. 각 스킬이 단순 팁 모음이 아니라 **실무 규칙과 보조 스크립트가 묶인 패키지**라는 점
 
-    SKILLS --> RBP["react-best-practices/\nReact/Next.js 성능 최적화 (64 규칙)"]
-    SKILLS --> CP["composition-patterns/\nReact 컴포지션 패턴 (8 규칙)"]
-    SKILLS --> RNS["react-native-skills/\nReact Native 베스트 프랙티스 (30+ 규칙)"]
-    SKILLS --> WDG["web-design-guidelines/\n웹 UI/UX 100+ 규칙"]
-    SKILLS --> DTV["deploy-to-vercel/\nVercel 배포 자동화"]
-    SKILLS --> VCT["vercel-cli-with-tokens/\nVercel CLI 토큰 인증"]
-
-    PACKAGES --> BUILD["react-best-practices-build/\n규칙 컴파일 도구"]
-
-    style ROOT fill:#000,color:#fff,stroke:#000
-    style SKILLS fill:#171717,color:#fff,stroke:#333
-    style PACKAGES fill:#171717,color:#fff,stroke:#333
-    style RBP fill:#1a1a2e,color:#a78bfa,stroke:#4c1d95
-    style CP fill:#1a1a2e,color:#a78bfa,stroke:#4c1d95
-    style RNS fill:#1a1a2e,color:#a78bfa,stroke:#4c1d95
-    style WDG fill:#1a1a2e,color:#a78bfa,stroke:#4c1d95
-    style DTV fill:#0f2027,color:#6ee7b7,stroke:#065f46
-    style VCT fill:#0f2027,color:#6ee7b7,stroke:#065f46
-    style BUILD fill:#1c1917,color:#fbbf24,stroke:#78350f
-```
+즉 이 저장소는 “예제 모음”보다 **작업별 전문성 확장 레이어**에 가깝다.
 
 ---
 
-## 6개 스킬 개요
+## 왜 지금 다시 봐야 하나
 
-### 1. react-best-practices (React 성능 최적화)
+### 1. 현재 upstream은 7개 스킬 축으로 읽어야 한다
 
-| 항목 | 내용 |
-|------|------|
-| **핵심 설명** | Vercel Engineering이 실전에서 검증한 React/Next.js 성능 최적화 가이드. 64개 규칙이 8개 우선순위 카테고리로 정리되어 있습니다. |
-| **주요 규칙** | Promise.all 병렬 처리, dynamic import, React.cache(), useMemo, 번들 barrel import 금지, Suspense 경계 설정 |
-| **난이도 범위** | 초급 ~ 고급 |
-| **언제 사용하나** | React 컴포넌트 작성 중, Next.js 데이터 페칭 구현 중, 성능 리뷰 중, 번들 최적화 작업 중 |
-| **트리거 키워드** | "React 컴포넌트 만들어줘", "Next.js 페이지 최적화", "번들 사이즈 줄여줘", "성능 리뷰" |
-| **상세 문서** | [categories/react-best-practices.md](categories/react-best-practices.md) |
+기존 가이드는 6개 스킬을 중심으로 잘 정리되어 있었다. 하지만 현재 upstream README에는 다음 스킬들이 전면에 잡힌다.
 
-### 2. composition-patterns (React 컴포지션 패턴)
+- `react-best-practices`
+- `web-design-guidelines`
+- `react-native-guidelines`
+- `react-view-transitions`
+- `composition-patterns`
+- `vercel-deploy-claimable`
+- `vercel-cli-with-tokens`
 
-| 항목 | 내용 |
-|------|------|
-| **핵심 설명** | Boolean prop 남용을 막는 React 컴포지션 패턴 모음. Compound Component, State Lifting, Context Interface 패턴을 체계적으로 정리합니다. |
-| **주요 규칙** | Compound Components, State Lift, Context Interface, Children over renderX, Explicit Variants |
-| **난이도 범위** | 중급 ~ 고급 |
-| **언제 사용하나** | Boolean prop이 많은 컴포넌트 리팩토링 중, 재사용 컴포넌트 라이브러리 설계 중, Prop Drilling 해결 중 |
-| **트리거 키워드** | "컴포넌트 리팩토링", "boolean props 정리", "컴포넌트 라이브러리 설계" |
-| **상세 문서** | [categories/composition-patterns.md](categories/composition-patterns.md) |
+즉 지금은 **React View Transition API / Next.js view transition 흐름**이 새로운 핵심 축으로 들어왔다.
 
-### 3. react-native-skills (React Native 가이드라인)
+### 2. 이 저장소는 “문서집”이 아니라 설치 가능한 skill pack이다
 
-| 항목 | 내용 |
-|------|------|
-| **핵심 설명** | React Native 및 Expo 앱의 성능과 아키텍처 최적화 가이드. 30개 이상 규칙이 렌더링, 리스트 성능, 애니메이션, UI 등 14개 섹션으로 구성됩니다. |
-| **주요 규칙** | FlashList 가상화, GPU 속성 애니메이션, 네이티브 네비게이터, Pressable, expo-image |
-| **난이도 범위** | 초급 ~ 고급 |
-| **언제 사용하나** | React Native/Expo 앱 개발 중, 모바일 성능 최적화 중, 애니메이션/제스처 구현 중 |
-| **트리거 키워드** | "React Native 앱 만들어줘", "Expo 최적화", "모바일 리스트 성능" |
-| **상세 문서** | [categories/react-native-skills.md](categories/react-native-skills.md) |
+원본 구조를 보면 핵심은 다음과 같다.
 
-### 4. web-design-guidelines (웹 인터페이스 가이드라인)
+- `skills/` — 실제 설치 대상 스킬들
+- `packages/` — 빌드/컴파일 도구
+- `AGENTS.md`, `CLAUDE.md` — 에이전트 표면과 메타 지식
 
-| 항목 | 내용 |
-|------|------|
-| **핵심 설명** | 웹 UI 코드를 100개 이상 규칙으로 감사하는 스킬. 접근성(a11y), 성능, UX, 폼 처리, 애니메이션, 다크모드 등을 체계적으로 점검합니다. |
-| **주요 규칙** | ARIA 레이블, 포커스 상태, 폼 자동완성, prefers-reduced-motion, 레이지 로딩, URL 상태 반영 |
-| **난이도 범위** | 초급 ~ 중급 |
-| **언제 사용하나** | UI 코드 리뷰 중, 접근성 감사 중, UX 점검 중, 사이트 품질 개선 중 |
-| **트리거 키워드** | "UI 리뷰해줘", "접근성 체크", "디자인 감사", "UX 점검" |
-| **상세 문서** | [categories/web-design-guidelines.md](categories/web-design-guidelines.md) |
+즉 사용자는 문서를 읽고 끝나는 게 아니라, **스킬을 실제 에이전트에 설치해 동작시키는 것**이 목적이다.
 
-### 5. deploy-to-vercel (Vercel 배포)
+### 3. 스킬을 개별 문서가 아니라 작업 레인으로 읽어야 한다
 
-| 항목 | 내용 |
-|------|------|
-| **핵심 설명** | 프로젝트를 Vercel에 배포하는 전체 흐름을 자동화합니다. 프로젝트 상태(linked/unlinked, CLI 인증 여부)를 자동 감지해 최적의 배포 방법을 선택합니다. |
-| **주요 기능** | Git Push 배포, CLI 배포, 인증 없는 Fallback 배포, 팀 선택, 클레임 URL 제공 |
-| **난이도 범위** | 초급 |
-| **언제 사용하나** | 프로젝트를 Vercel에 올릴 때, 프리뷰 URL이 필요할 때, CI/CD 없이 빠르게 배포할 때 |
-| **트리거 키워드** | "배포해줘", "deploy my app", "push this live", "Vercel에 올려줘" |
-| **상세 문서** | [categories/deploy-to-vercel.md](categories/deploy-to-vercel.md) |
+이 저장소를 잘 쓰려면 “스킬 이름 외우기”보다, 먼저 어떤 레인이 필요한지 구분하는 게 낫다.
 
-### 6. vercel-cli-with-tokens (Vercel CLI 토큰 인증)
+- **React 성능 레인** — `react-best-practices`
+- **컴포넌트 구조 레인** — `composition-patterns`
+- **모바일 구현 레인** — `react-native-guidelines`
+- **UI 품질 감사 레인** — `web-design-guidelines`
+- **전환 애니메이션 레인** — `react-view-transitions`
+- **배포 레인** — `vercel-deploy-claimable`, `vercel-cli-with-tokens`
 
-| 항목 | 내용 |
-|------|------|
-| **핵심 설명** | 대화형 로그인(vercel login) 없이 토큰 기반으로 Vercel CLI를 사용하는 방법을 안내합니다. CI/CD 환경이나 자동화 스크립트에 적합합니다. |
-| **주요 기능** | VERCEL_TOKEN 환경변수 설정, 프로젝트 링크, 배포, 환경변수 관리, 도메인 관리 |
-| **난이도 범위** | 중급 |
-| **언제 사용하나** | CI/CD 파이프라인에서 Vercel 배포 중, 토큰이 있는 상태에서 vercel 명령 실행 중 |
-| **트리거 키워드** | "Vercel 토큰으로 배포", "vercel env 설정", "CI에서 vercel 배포" |
-| **상세 문서** | [categories/vercel-cli-with-tokens.md](categories/vercel-cli-with-tokens.md) |
+이렇게 보면 각 스킬의 쓰임새가 훨씬 선명해진다.
 
 ---
 
-## 추천 학습 경로 요약
+## 지금 가장 먼저 봐야 할 것
 
-역할에 따라 필요한 것만 골라서 설치하면 됩니다.
+### 1. React / Next.js 최적화가 필요하면
 
-> 각 역할에 맞는 최단 경로를 따라가면 바로 실전에 투입할 수 있습니다. 필수 → 권장 → 선택 순서로 진행하세요.
+- `react-best-practices`
+- `composition-patterns`
+- 필요 시 `react-view-transitions`
 
-```mermaid
-flowchart LR
-    subgraph RN["React/Next.js 개발자"]
-        direction LR
-        A1["react-best-practices\n✅ 필수"]
-        A2["composition-patterns\n⭐ 권장"]
-        A3["web-design-guidelines\n💡 선택"]
-        A1 --> A2 --> A3
-    end
+### 2. 모바일 앱이면
 
-    subgraph RNative["React Native 개발자"]
-        direction LR
-        B1["react-native-skills\n✅ 필수"]
-        B2["composition-patterns\n⭐ 권장"]
-        B1 --> B2
-    end
+- `react-native-guidelines`
+- 필요 시 `composition-patterns`
 
-    subgraph Deploy["배포 담당자"]
-        direction LR
-        C1["deploy-to-vercel\n✅ 필수"]
-        C2["vercel-cli-with-tokens\n⭐ 권장"]
-        C1 --> C2
-    end
+### 3. UI 품질 검토면
 
-    style A1 fill:#1a1a2e,color:#6ee7b7,stroke:#065f46
-    style A2 fill:#1a1a2e,color:#fbbf24,stroke:#78350f
-    style A3 fill:#1a1a2e,color:#93c5fd,stroke:#1e3a5f
-    style B1 fill:#1a1a2e,color:#6ee7b7,stroke:#065f46
-    style B2 fill:#1a1a2e,color:#fbbf24,stroke:#78350f
-    style C1 fill:#1a1a2e,color:#6ee7b7,stroke:#065f46
-    style C2 fill:#1a1a2e,color:#fbbf24,stroke:#78350f
-```
+- `web-design-guidelines`
 
-자세한 학습 경로, 스킬 간 연결 관계, 시나리오별 실행 순서는 [01-learning-paths.md](01-learning-paths.md)를 참조하세요.
+### 4. 배포 자동화면
+
+- `vercel-deploy-claimable`
+- `vercel-cli-with-tokens`
 
 ---
 
-## 설치 방법
+## 추천 읽기 순서
 
-### 방법 1: npx (권장)
-
-```bash
-npx skills add vercel-labs/agent-skills
-```
-
-전체 스킬 패키지를 한 번에 설치합니다.
-
-### 방법 2: Claude Code 수동 설치
-
-```bash
-# 특정 스킬만 설치
-cp -r ~/guide/origin/agent-skills/skills/react-best-practices ~/.claude/skills/
-
-# 여러 스킬 설치
-for skill in react-best-practices composition-patterns react-native-skills; do
-  cp -r ~/guide/origin/agent-skills/skills/$skill ~/.claude/skills/
-done
-```
-
-### 방법 3: claude.ai 웹에서 사용
-
-스킬의 `SKILL.md` 파일 내용을 프로젝트 지식(Project Knowledge)에 붙여넣으면 됩니다.
+1. `sections/01-overview.md` — 이 저장소를 현재 기준으로 어떻게 읽어야 하는지
+2. `01-learning-paths.md` — 역할별/작업별 진입 경로
+3. `categories/overview.md` — 업스트림 구조와 최근 변화
+4. 각 스킬 category 문서
+5. `02-glossary.md` — 형식과 용어 정리
 
 ---
 
-## 문서 구조
+## 흔한 오해
 
-```
-vercel-agent-skills-guide/
-├── README.md                          # 이 문서 (전체 개요)
-├── 01-learning-paths.md               # 학습 경로 상세 가이드
-├── 02-glossary.md                     # Agent Skills 용어 사전 (30+ 용어)
-└── categories/                        # 스킬별 상세 문서
-    ├── react-best-practices.md        # React/Next.js 성능 최적화 (64 규칙)
-    ├── composition-patterns.md        # React 컴포지션 패턴 (8 규칙)
-    ├── react-native-skills.md         # React Native 가이드라인 (30+ 규칙)
-    ├── web-design-guidelines.md       # 웹 인터페이스 가이드라인 (100+ 규칙)
-    ├── deploy-to-vercel.md            # Vercel 배포 자동화
-    └── vercel-cli-with-tokens.md      # Vercel CLI 토큰 인증
-```
+### 오해 1 — 스킬은 그냥 긴 프롬프트다
+
+아니다. 스킬은 구조화된 지식 패키지이며, 경우에 따라 스크립트와 메타데이터까지 포함한다.
+
+### 오해 2 — 이 저장소는 React 팁 모음집이다
+
+아니다. React 계열 비중이 크긴 하지만, 모바일·UI 감사·배포·view transition까지 별도 레인이 있다.
+
+### 오해 3 — 가이드에 있는 스킬 수가 곧 현재 upstream 현실이다
+
+아니다. 이 저장소는 비교적 빠르게 변하고, 지금은 `react-view-transitions`를 포함한 7개 스킬 구조로 읽는 편이 더 정확하다.
 
 ---
 
-## 참고 자료
+## 다음 문서
 
-### Agent Skills 원본
-
-- **GitHub**: [https://github.com/vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) — 6개 스킬의 원본 코드
-- **Agent Skills 포맷**: [https://agentskills.io/](https://agentskills.io/) — 스킬 파일 형식 표준
-
-### Vercel 공식 문서
-
-- **Vercel 배포 가이드**: Next.js, Vite, Astro 등 40+ 프레임워크 배포 방법
-- **Vercel CLI 문서**: CLI 명령어 전체 레퍼런스
-- **Web Interface Guidelines**: [웹 UI 100+ 규칙 원본](https://github.com/vercel-labs/web-interface-guidelines)
-
-### 관련 기술
-
-| 기술 | 용도 | 관련 스킬 |
-|------|------|----------|
-| **Next.js** | React 풀스택 프레임워크 | react-best-practices |
-| **React 19** | 최신 React (forwardRef 제거 등) | react-best-practices, composition-patterns |
-| **Expo** | React Native 개발 플랫폼 | react-native-skills |
-| **Reanimated** | React Native 고성능 애니메이션 | react-native-skills |
-| **Vercel CLI** | 배포 및 관리 CLI 도구 | deploy-to-vercel, vercel-cli-with-tokens |
-
----
-
-> 이 가이드에 대한 질문이나 개선 제안은 GitHub Issues로 남겨주세요.
+- 현재 구조를 먼저 잡으려면 `sections/01-overview.md`
+- 어떤 스킬을 어떤 순서로 써야 할지 보려면 `01-learning-paths.md`
+- 개별 스킬 해설은 `categories/` 문서들로 이어진다
 
 <!-- GUIDE_SYNC:START -->
 ## 자동 동기화 상태
