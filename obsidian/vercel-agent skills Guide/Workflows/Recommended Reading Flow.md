@@ -9,13 +9,14 @@
 2. [[02 Learning Paths]]
 3. [[03 Glossary]]
 4. [[Deep Dives/CLAUDE]]
-5. [[Categories/Composition patterns]]
-6. [[Categories/Deploy to vercel]]
-7. [[01 Overview]]
-8. [[Categories/React best practices]]
-9. [[Categories/React native skills]]
-10. [[Categories/Vercel cli with tokens]]
-11. [[Categories/Web design guidelines]]
+5. [[01 Overview]]
+6. [[Categories/Composition patterns]]
+7. [[Categories/Deploy to vercel]]
+8. [[Categories/Overview]]
+9. [[Categories/React best practices]]
+10. [[Categories/React native skills]]
+11. [[Categories/Vercel cli with tokens]]
+12. [[Categories/Web design guidelines]]
 
 ## 이유
 

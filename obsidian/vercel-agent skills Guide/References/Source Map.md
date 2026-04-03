@@ -13,6 +13,7 @@
 - `CLAUDE.md`
 - `README.md`
 - `categories`
+- `sections`
 
 ## Repo → note mapping
 
@@ -22,9 +23,10 @@
 | `01-learning-paths.md` | `02 Learning Paths.md` |
 | `02-glossary.md` | `03 Glossary.md` |
 | `CLAUDE.md` | `Deep Dives/CLAUDE.md` |
+| `sections/01-overview.md` | `01 Overview.md` |
 | `categories/composition-patterns.md` | `Categories/Composition patterns.md` |
 | `categories/deploy-to-vercel.md` | `Categories/Deploy to vercel.md` |
-| `categories/overview.md` | `01 Overview.md` |
+| `categories/overview.md` | `Categories/Overview.md` |
 | `categories/react-best-practices.md` | `Categories/React best practices.md` |
 | `categories/react-native-skills.md` | `Categories/React native skills.md` |
 | `categories/vercel-cli-with-tokens.md` | `Categories/Vercel cli with tokens.md` |

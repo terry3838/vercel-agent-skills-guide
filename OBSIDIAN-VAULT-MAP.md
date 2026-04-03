@@ -24,9 +24,10 @@
 | `01-learning-paths.md` | `vercel-agent skills Guide/02 Learning Paths.md` |
 | `02-glossary.md` | `vercel-agent skills Guide/03 Glossary.md` |
 | `CLAUDE.md` | `vercel-agent skills Guide/Deep Dives/CLAUDE.md` |
+| `sections/01-overview.md` | `vercel-agent skills Guide/01 Overview.md` |
 | `categories/composition-patterns.md` | `vercel-agent skills Guide/Categories/Composition patterns.md` |
 | `categories/deploy-to-vercel.md` | `vercel-agent skills Guide/Categories/Deploy to vercel.md` |
-| `categories/overview.md` | `vercel-agent skills Guide/01 Overview.md` |
+| `categories/overview.md` | `vercel-agent skills Guide/Categories/Overview.md` |
 | `categories/react-best-practices.md` | `vercel-agent skills Guide/Categories/React best practices.md` |
 | `categories/react-native-skills.md` | `vercel-agent skills Guide/Categories/React native skills.md` |
 | `categories/vercel-cli-with-tokens.md` | `vercel-agent skills Guide/Categories/Vercel cli with tokens.md` |
