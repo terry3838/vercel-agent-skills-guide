@@ -2,14 +2,14 @@
 
 ## latest cycle
 
-- previous source sha: `d8d9f624bc54beaf7af9a5033d41d90aa49d7f5a`
+- previous source sha: `73140fc5b3a214ad3222bcf557b397b3c02d11c1`
 - current source sha: `73140fc5b3a214ad3222bcf557b397b3c02d11c1`
-- mode: `update`
-- impact labels: 스킬/플러그인, 소스코드
+- mode: `no-change`
+- impact labels: 일반 변경
 
 ## decision
 
-origin 변경 파일을 기준으로 guide 문서의 관련 섹션을 다시 읽고 반영했습니다. 핵심 영향 영역: 스킬/플러그인, 소스코드.
+이번 싸이클에서는 origin 변경이 없어 guide 본문은 유지했고, 동기화 기준점만 재확인했습니다.
 
 ## upstream commits reviewed
 
@@ -27,17 +27,4 @@ origin 변경 파일을 기준으로 guide 문서의 관련 섹션을 다시 읽
 - source remote: `https://github.com/vercel-labs/agent-skills.git`
 - docs/interesting dirs: skills/, packages/
 - changed file sample:
-- `packages/react-best-practices-build/test-cases.json`
-- `skills/react-best-practices.zip`
-- `skills/react-best-practices/AGENTS.md`
-- `skills/react-best-practices/SKILL.md`
-- `skills/react-best-practices/rules/advanced-effect-event-deps.md`
-- `skills/react-view-transitions.zip`
-- `skills/react-view-transitions/AGENTS.md`
-- `skills/react-view-transitions/README.md`
-- `skills/react-view-transitions/SKILL.md`
-- `skills/react-view-transitions/metadata.json`
-- `skills/react-view-transitions/references/css-recipes.md`
-- `skills/react-view-transitions/references/implementation.md`
-- `skills/react-view-transitions/references/nextjs.md`
-- `skills/react-view-transitions/references/patterns.md`
+- 변경 파일 없음

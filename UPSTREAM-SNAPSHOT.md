@@ -1,10 +1,10 @@
 # Upstream Snapshot — agent-skills
 
 - source repo: `https://github.com/vercel-labs/agent-skills.git`
-- previous synced commit: `d8d9f624bc54beaf7af9a5033d41d90aa49d7f5a`
+- previous synced commit: `73140fc5b3a214ad3222bcf557b397b3c02d11c1`
 - current synced commit: `73140fc5b3a214ad3222bcf557b397b3c02d11c1`
-- sync mode: `update`
-- impact labels: 스킬/플러그인, 소스코드
+- sync mode: `no-change`
+- impact labels: 일반 변경
 - guide repo: `vercel-agent-skills-guide`
 
 ## 원본 한줄 요약
@@ -32,20 +32,7 @@ A collection of skills for AI coding agents. Skills are packaged instructions an
 
 ## changed files
 
-- `packages/react-best-practices-build/test-cases.json`
-- `skills/react-best-practices.zip`
-- `skills/react-best-practices/AGENTS.md`
-- `skills/react-best-practices/SKILL.md`
-- `skills/react-best-practices/rules/advanced-effect-event-deps.md`
-- `skills/react-view-transitions.zip`
-- `skills/react-view-transitions/AGENTS.md`
-- `skills/react-view-transitions/README.md`
-- `skills/react-view-transitions/SKILL.md`
-- `skills/react-view-transitions/metadata.json`
-- `skills/react-view-transitions/references/css-recipes.md`
-- `skills/react-view-transitions/references/implementation.md`
-- `skills/react-view-transitions/references/nextjs.md`
-- `skills/react-view-transitions/references/patterns.md`
+- 변경 파일 없음
 
 ## README excerpt
 
