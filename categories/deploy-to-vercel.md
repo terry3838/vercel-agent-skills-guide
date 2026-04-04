@@ -170,7 +170,7 @@ vercel deploy [path] -y --no-wait --scope <team-slug>
 
 ```bash
 # claude.ai 샌드박스에서
-bash /mnt/skills/user/deploy-to-vercel/resources/deploy.sh [path]
+bash $MNT_ROOT/skills/user/deploy-to-vercel/resources/deploy.sh [path]
 
 # Claude Code 로컬 설치에서
 bash ~/.claude/skills/deploy-to-vercel/resources/deploy.sh [path]

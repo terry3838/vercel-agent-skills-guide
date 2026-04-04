@@ -107,7 +107,7 @@ Anthropic이 만든 AI 코딩 에이전트 CLI. Agent Skills를 `~/.claude/skill
 `deploy-to-vercel` 스킬에 포함된 배포 스크립트. Vercel CLI 인증 없이 프로젝트를 배포할 때 쓴다 (no-auth fallback).
 
 - **경로**: `skills/deploy-to-vercel/resources/deploy.sh`
-- **claude.ai 샌드박스 사용**: `bash /mnt/skills/user/deploy-to-vercel/resources/deploy.sh`
+- **claude.ai 샌드박스 사용**: `bash $MNT_ROOT/skills/user/deploy-to-vercel/resources/deploy.sh`
 
 ---
 
