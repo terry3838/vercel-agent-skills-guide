@@ -2,9 +2,9 @@
 
 - source repo: `https://github.com/vercel-labs/agent-skills.git`
 - previous synced commit: `73140fc5b3a214ad3222bcf557b397b3c02d11c1`
-- current synced commit: `73140fc5b3a214ad3222bcf557b397b3c02d11c1`
-- sync mode: `no-change`
-- impact labels: 일반 변경
+- current synced commit: `47863b24f8e22966bfcf8470debc7ba8c2c3b99c`
+- sync mode: `update`
+- impact labels: 스킬/플러그인, 소스코드
 - guide repo: `vercel-agent-skills-guide`
 
 ## 원본 한줄 요약
@@ -13,14 +13,10 @@ A collection of skills for AI coding agents. Skills are packaged instructions an
 
 ## recent upstream commits
 
-- `73140fc Refine react-view-transition skill`
-- `1a5a9a0 Refine patterns in view-transitions-skill`
-- `992d7f6 Merge pull request #212 from vercel-labs/shu/Cb1db`
-- `93f5a2d new rule`
-- `bed2162 Refine react-view-transition skill`
-- `01bec29 Tweak react-view-transition skill`
-- `3755c87 Refine react-view-transition to specify no need for react canary`
-- `a7b34e8 Remove references from react-view-transition`
+- `47863b2 Merge pull request #227 from vercel-labs/shu/rBVLn`
+- `dc8367e update example`
+- `6938f37 Merge pull request #226 from vercel-labs/shu/vPV6R`
+- `805687f new bundler skill`
 
 ## top-level structure
 
@@ -32,7 +28,10 @@ A collection of skills for AI coding agents. Skills are packaged instructions an
 
 ## changed files
 
-- 변경 파일 없음
+- `packages/react-best-practices-build/test-cases.json`
+- `skills/react-best-practices/AGENTS.md`
+- `skills/react-best-practices/SKILL.md`
+- `skills/react-best-practices/rules/bundle-analyzable-paths.md`
 
 ## README excerpt
 
