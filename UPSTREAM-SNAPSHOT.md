@@ -1,10 +1,10 @@
 # Upstream Snapshot — agent-skills
 
 - source repo: `https://github.com/vercel-labs/agent-skills.git`
-- previous synced commit: `73140fc5b3a214ad3222bcf557b397b3c02d11c1`
+- previous synced commit: `47863b24f8e22966bfcf8470debc7ba8c2c3b99c`
 - current synced commit: `47863b24f8e22966bfcf8470debc7ba8c2c3b99c`
-- sync mode: `update`
-- impact labels: 스킬/플러그인, 소스코드
+- sync mode: `no-change`
+- impact labels: 일반 변경
 - guide repo: `vercel-agent-skills-guide`
 
 ## 원본 한줄 요약
@@ -17,6 +17,10 @@ A collection of skills for AI coding agents. Skills are packaged instructions an
 - `dc8367e update example`
 - `6938f37 Merge pull request #226 from vercel-labs/shu/vPV6R`
 - `805687f new bundler skill`
+- `73140fc Refine react-view-transition skill`
+- `1a5a9a0 Refine patterns in view-transitions-skill`
+- `992d7f6 Merge pull request #212 from vercel-labs/shu/Cb1db`
+- `93f5a2d new rule`
 
 ## top-level structure
 
@@ -28,10 +32,7 @@ A collection of skills for AI coding agents. Skills are packaged instructions an
 
 ## changed files
 
-- `packages/react-best-practices-build/test-cases.json`
-- `skills/react-best-practices/AGENTS.md`
-- `skills/react-best-practices/SKILL.md`
-- `skills/react-best-practices/rules/bundle-analyzable-paths.md`
+- 변경 파일 없음
 
 ## README excerpt
 
