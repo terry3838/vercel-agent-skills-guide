@@ -3,28 +3,23 @@
 ## latest cycle
 
 - previous source sha: `47863b24f8e22966bfcf8470debc7ba8c2c3b99c`
-- current source sha: `47863b24f8e22966bfcf8470debc7ba8c2c3b99c`
-- mode: `no-change`
-- impact labels: 일반 변경
+- current source sha: `ce3e64e468f8fa09a2d075d102771838061fdac0`
+- mode: `update`
+- impact labels: 스킬/플러그인
 
 ## decision
 
-이번 싸이클에서는 origin 변경이 없어 guide 본문은 유지했고, 동기화 기준점만 재확인했습니다.
+origin 변경 파일을 기준으로 guide 문서의 관련 섹션을 다시 읽고 반영했습니다. 핵심 영향 영역: 스킬/플러그인.
 
 ## upstream commits reviewed
 
-- `47863b2 Merge pull request #227 from vercel-labs/shu/rBVLn`
-- `dc8367e update example`
-- `6938f37 Merge pull request #226 from vercel-labs/shu/vPV6R`
-- `805687f new bundler skill`
-- `73140fc Refine react-view-transition skill`
-- `1a5a9a0 Refine patterns in view-transitions-skill`
-- `992d7f6 Merge pull request #212 from vercel-labs/shu/Cb1db`
-- `93f5a2d new rule`
+- `ce3e64e Merge pull request #231 from tonypan2/tonypan/vercel-cli-sp-awareness`
+- `77a6a14 vercel-cli-with-tokens: fix 5 real bugs + document Stripe Projects plan changes`
 
 ## evidence
 
 - source remote: `https://github.com/vercel-labs/agent-skills.git`
 - docs/interesting dirs: skills/, packages/
 - changed file sample:
-- 변경 파일 없음
+- `skills/vercel-cli-with-tokens.zip`
+- `skills/vercel-cli-with-tokens/SKILL.md`

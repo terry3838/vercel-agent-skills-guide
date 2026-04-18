@@ -2,9 +2,9 @@
 
 - source repo: `https://github.com/vercel-labs/agent-skills.git`
 - previous synced commit: `47863b24f8e22966bfcf8470debc7ba8c2c3b99c`
-- current synced commit: `47863b24f8e22966bfcf8470debc7ba8c2c3b99c`
-- sync mode: `no-change`
-- impact labels: 일반 변경
+- current synced commit: `ce3e64e468f8fa09a2d075d102771838061fdac0`
+- sync mode: `update`
+- impact labels: 스킬/플러그인
 - guide repo: `vercel-agent-skills-guide`
 
 ## 원본 한줄 요약
@@ -13,14 +13,8 @@ A collection of skills for AI coding agents. Skills are packaged instructions an
 
 ## recent upstream commits
 
-- `47863b2 Merge pull request #227 from vercel-labs/shu/rBVLn`
-- `dc8367e update example`
-- `6938f37 Merge pull request #226 from vercel-labs/shu/vPV6R`
-- `805687f new bundler skill`
-- `73140fc Refine react-view-transition skill`
-- `1a5a9a0 Refine patterns in view-transitions-skill`
-- `992d7f6 Merge pull request #212 from vercel-labs/shu/Cb1db`
-- `93f5a2d new rule`
+- `ce3e64e Merge pull request #231 from tonypan2/tonypan/vercel-cli-sp-awareness`
+- `77a6a14 vercel-cli-with-tokens: fix 5 real bugs + document Stripe Projects plan changes`
 
 ## top-level structure
 
@@ -32,7 +26,8 @@ A collection of skills for AI coding agents. Skills are packaged instructions an
 
 ## changed files
 
-- 변경 파일 없음
+- `skills/vercel-cli-with-tokens.zip`
+- `skills/vercel-cli-with-tokens/SKILL.md`
 
 ## README excerpt
 
